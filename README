@@ -1,0 +1,20 @@
+Mackenzie Malainey, 1570494
+Exercise #5
+CMPUT 275, Winter 2020
+
+Description:
+Implement individual component counter for a given graph object read in from
+provided file path in arguments
+
+Instructions:
+Compile code using the makefile, creating object files first, then executable
+(See Makefile targets information below)
+Run application using: ./graph_concepts [FILENAME]
+
+Makefile Targets:
+ - graph_concepts.o: build graph_concepts object file
+ - digraph.o: build digraph object file
+ - graph_concepts: build graph_concepts application
+
+Note:
+This code was designed specifically in mind to work for both undirected and directed graphs
