@@ -11,13 +11,13 @@ server: server.o dijkstra.o digraph.o
 	$(CC) server.o digraph.o dijkstra.o -o server
 
 server.o:
-	$(CC) -c server.cpp
+	$(CC) -c server/server.cpp
 
 digraph.o:
-	$(CC) -c digraph.cpp
+	$(CC) -c server/digraph.cpp
 
 dijkstra.o:
-	$(CC) -c dijkstra.cpp
+	$(CC) -c server/dijkstra.cpp
 
 clean:
 	rm -f digraph.o graph_concepts.o graph_concepts
