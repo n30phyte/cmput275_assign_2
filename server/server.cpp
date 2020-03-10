@@ -1,9 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <stack>
 #include <string>
 
 #include "wdigraph.h"
+#include "dijkstra.h"
+
+const char MAP_FILE_NAME[] = "edmonton-roads-2.0.1.text";
 
 using namespace std;
 
@@ -13,7 +17,7 @@ struct Point {
 };
 
 long long manhattan(const Point& pt1, const Point& pt2) {
-    return abs(pt1.lon - pt1.lon) + abs(pt2.lon - pt2.lon);
+    return abs(pt1.lat - pt1.lat) + abs(pt1.lon - pt2.lon);
 }
 
 /*
@@ -28,6 +32,8 @@ long long manhattan(const Point& pt1, const Point& pt2) {
     points: a mapping between vertex identifiers and their coordinates
 */
 void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &points) {
+
+    cout << "Reading graph from " << filename << endl;
 
     // Set up out file stream
     ifstream file;
@@ -73,17 +79,59 @@ void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &poin
 
 }
 
-int main(int argc, char* argv[]) {
+stack<Point>* getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &map) {
 
-    if (argc < 2) {
-        cout << "Invalid argument, command usage: ./graph_concepts [filename]" << endl;
-        return 22;
+    stack<Point>* route = new stack<Point>();
+
+    unordered_map<int, PIL> tree;
+
+    dijkstra(graph, a, tree);
+
+    int vertex = b;
+
+    do {
+        PIL next = tree[vertex];
+        route->push(map[vertex]);
+        vertex = next.first;
+    } while (vertex != a);
+
+    route->push(map[a]);
+
+    return route;
+}
+
+
+
+pair<int, int> getVertices(const Point p1, const Point p2, unordered_map<int, Point> &map) {
+    // Instead of running this function twice for each point we know it will only ever get ran
+    // when requiring
+
+    pair<int, int> vs(-1,-1);
+
+    for (unordered_map<int, Point>::const_iterator iter = map.begin(); iter != map.end(); iter++) {
+        if (manhattan(iter->second, p1) > manhattan(map[vs.first], p1)) vs.first = iter->first;
+        if (manhattan(iter->second, p2) > manhattan(map[vs.second], p2)) vs.second = iter->first;
     }
+
+    return vs;
+
+}
+
+void foo() {
+    Point start;
+    Point end;
+
+
+
+}
+
+int main() {
 
     WDigraph graph;
     unordered_map<int, Point> pMap;
 
-    readGraph(argv[1], graph, pMap);
+    readGraph(MAP_FILE_NAME, graph, pMap);
 
     return 0;
 }
+
