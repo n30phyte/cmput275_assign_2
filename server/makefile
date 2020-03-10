@@ -6,22 +6,23 @@
 # # # # # # # # # # # # # # # #
 
 CC = g++
+CFLAGS = -g -Wall
 
 # Directory for desktop build files
 BUILD_DIR = build
 
 server: server.o dijkstra.o digraph.o
 	cd $(BUILD_DIR); \
-	$(CC) server.o digraph.o dijkstra.o -o server
+	$(CC) server.o digraph.o dijkstra.o -o ../server
 
 server.o: server.cpp $(BUILD_DIR)
-	$(CC) -c server.cpp -o $(BUILD_DIR)/server.o
+	$(CC) -c server.cpp -o $(BUILD_DIR)/server.o $(CFLAGS)
 
 digraph.o: digraph.cpp $(BUILD_DIR)
-	$(CC) -c digraph.cpp -o $(BUILD_DIR)/digraph.o
+	$(CC) -c digraph.cpp -o $(BUILD_DIR)/digraph.o $(CFLAGS)
 
 dijkstra.o: dijkstra.cpp $(BUILD_DIR)
-	$(CC) -c dijkstra.cpp -o $(BUILD_DIR)/dijkstra.o
+	$(CC) -c dijkstra.cpp -o $(BUILD_DIR)/dijkstra.o $(CFLAGS)
 
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
