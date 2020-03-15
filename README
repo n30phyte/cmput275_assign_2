@@ -4,17 +4,16 @@ Assign #2 Part 1
 CMPUT 275, Winter 2020
 
 Description:
-Arduino Pathfinder server 
+Arduino pathfinder server.
+Communicates with Arduino client to return the shortest path between two places on a map
 
 Instructions:
-Compile code using the makefile, creating object files first, then executable
+Compile code using the makefile
 (See Makefile targets information below)
-Run application using: ./graph_concepts [FILENAME]
+Run application using: ./server
 
 Makefile Targets:
- - graph_concepts.o: build graph_concepts object file
+ - server: build server application
+ - server.o: build server object file
  - digraph.o: build digraph object file
- - graph_concepts: build graph_concepts application
-
-Note:
-This code was designed specifically in mind to work for both undirected and directed graphs
+ - dijkstra.o: build dijkstra object file

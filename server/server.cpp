@@ -76,16 +76,32 @@ void readGraph(const string &filename, WDigraph &graph, unordered_map<int, Point
 
 }
 
+/**
+ * Description:
+ * Given a start and end vertex return the shortest path to the vertex.
+ *
+ * Paramters:
+ * a (int): Start vertex
+ * b (int): End vertex
+ * graph (WDigraph&) : Weighted directed graph representing road map
+ * map (unordered_map<int, Point>&): Map that associates each vertice with a Point obj
+ *
+ * Returns:
+ * path (stack<Point>*): Path from start to end vertex as a stack of Point objs, returns an empty stack if no such path exists
+ *
+ */
 stack<Point> *getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &map) {
 
     auto *route = new stack<Point>();
 
     unordered_map<int, PIL> tree;
 
+    // Build search tree
     dijkstra(graph, a, tree);
 
     int vertex = b;
 
+    // Build path from search tree, if path exists
     if (tree.count(vertex) > 0) {
 
         do {
@@ -101,7 +117,19 @@ stack<Point> *getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &
     return route;
 }
 
-
+/**
+ * Description:
+ * Gets the closest vertex ids to the given points
+ *
+ * Parameters:
+ * p1 (const Point): First point to clip
+ * p2 (const Point): Second point to clip
+ * map (unordered_map<int, Point>&): Map that provides vertexes associated with known points
+ *
+ * Returns:
+ * vertices (pair<int, int>): Vertex ID of the closest points to given points in respective order
+ *
+ */
 pair<int, int> getVertices(const Point p1, const Point p2, unordered_map<int, Point> &map) {
     // Instead of running this function twice for each point we know it will only ever get ran
     // when requiring
