@@ -6,7 +6,7 @@
 # # # # # # # # # # # # # # # #
 
 CC = g++
-CFLAGS = -g -Wall
+CFLAGS = -Wall
 
 # Directory for desktop build files
 BUILD_DIR = build

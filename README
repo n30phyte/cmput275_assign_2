@@ -1,10 +1,10 @@
 Mackenzie Malainey, 1570494
-Exercise #5
+Michael Kwok, 
+Assign #2 Part 1
 CMPUT 275, Winter 2020
 
 Description:
-Implement individual component counter for a given graph object read in from
-provided file path in arguments
+Arduino Pathfinder server 
 
 Instructions:
 Compile code using the makefile, creating object files first, then executable

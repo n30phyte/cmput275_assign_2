@@ -86,13 +86,17 @@ stack<Point> *getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &
 
     int vertex = b;
 
-    do {
-        PIL next = tree[vertex];
-        route->push(map[vertex]);
-        vertex = next.first;
-    } while (vertex != a);
+    if (tree.count(vertex) > 0) {
 
-    route->push(map[a]);
+        do {
+            PIL next = tree[vertex];
+            route->push(map[vertex]);
+            vertex = next.first;
+        } while (vertex != a);
+
+        route->push(map[a]);
+
+    }
 
     return route;
 }
@@ -129,22 +133,22 @@ int main() {
 
     State st = WaitingForRequest;
 
-    Point start{};
-    Point end{};
+    Point start;
+    Point end;
 
     stack<Point> *path = nullptr;
 
     string command;
 
-    while (st != Done) {
+    bool isDone = false;
+
+    while (!isDone) {
         switch (st) {
             case WaitingForRequest:
                 cin >> command;
                 if (command == "R") {
                     cin >> start.lat >> start.lon >> end.lat >> end.lon;
                     st = Processing;
-                } else if (command == "S") {
-                    st = Done;
                 }
                 break;
             case Processing: {
@@ -156,9 +160,7 @@ int main() {
                 break;
             case PrintOutput:
                 cout << "N " << path->size() << endl;
-                if(path->empty()) {
-                    st = WaitingForRequest;
-                } else {
+                if(!path->empty()) {
                     string ack;
                     cin >> ack;
                     while (!path->empty() && ack == "A") {
@@ -169,7 +171,11 @@ int main() {
                     }
                     cout << "E" << endl;
                 }
-                st = WaitingForRequest;
+                delete path;
+                st = Done;
+                break;
+            case Done:
+                isDone = true;
                 break;
         }
     }
