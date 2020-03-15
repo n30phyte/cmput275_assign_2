@@ -1,3 +1,10 @@
+/**
+ * Mackenzie Malainey, 1570494
+ * Michael Kwok, 
+ * Assign #2 Part 1
+ * CMPUT 275, Winter 2020
+ */
+
 // CHANGE SO NEIGHBOURS RETURNS AN ITERATOR INTO ITS SET
 
 #ifndef _GRAPH_H_

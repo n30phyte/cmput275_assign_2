@@ -17,3 +17,7 @@ Makefile Targets:
  - server.o: build server object file
  - digraph.o: build digraph object file
  - dijkstra.o: build dijkstra object file
+
+
+Acknowledgements:
+Some code was adapted from previous weekly problems, or built off of provided code from eClass
