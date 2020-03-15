@@ -16,10 +16,9 @@ void dijkstra(const WDigraph& graph, int startVertex,
 
         if (tree.count(v) == 0) {
             tree[v] = PIL(item.item.first, item.key);
-            unordered_set<int>::const_iterator n = graph.neighbours(v);
-            while (n != graph.endIterator(v)) {
-                events.insert(pair<int, int>(v, *n), item.key + graph.getCost(v, *n));
-                n++;
+
+            for(auto it = graph.neighbours(v); it != graph.endIterator(v); it++) {
+                events.insert(pair<int, int>(v, *it), item.key + graph.getCost(v, *it));
             }
         }
     }

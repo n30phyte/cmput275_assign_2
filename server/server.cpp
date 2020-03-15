@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
 #include <stack>
 #include <string>
 
@@ -16,7 +15,7 @@ struct Point {
     long long lon; // longitude of the point
 };
 
-long long manhattan(const Point& pt1, const Point& pt2) {
+long long manhattan(const Point &pt1, const Point &pt2) {
     return abs(pt1.lat - pt2.lat) + abs(pt1.lon - pt2.lon);
 }
 
@@ -31,7 +30,7 @@ long long manhattan(const Point& pt1, const Point& pt2) {
     graph: an instance of the weighted directed graph (WDigraph) class
     points: a mapping between vertex identifiers and their coordinates
 */
-void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &points) {
+void readGraph(const string &filename, WDigraph &graph, unordered_map<int, Point> &points) {
 
     // Set up out file stream
     ifstream file;
@@ -43,8 +42,8 @@ void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &poin
     while (!file.eof()) {
         getline(file, line);
 
-        int index = line.find(",", 2);
-        int index2 = line.find(",", index + 1);
+        int index = line.find(',', 2);
+        int index2 = line.find(',', index + 1);
 
         // V signals vertex format we need to parse is: V, x, lat, lon
         // where x is the unique id of the vertex
@@ -56,14 +55,14 @@ void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &poin
             double lon = stod(line.substr(index2 + 1));
 
             Point p = {
-                static_cast<long long>(lat * 100000),
-                static_cast<long long>(lon * 100000)
+                    static_cast<long long>(lat * 100000),
+                    static_cast<long long>(lon * 100000)
             };
 
             points[id] = p;
 
-        // E signals an edge, format we need to parse is: E, x1, x2
-        // where x1 is a vertex and x2 is another vertex
+            // E signals an edge, format we need to parse is: E, x1, x2
+            // where x1 is a vertex and x2 is another vertex
         } else if (line[0] == 'E') {
             int id1 = stoi(line.substr(2, index - 2));
             int id2 = stoi(line.substr(index + 1, index2 - index - 1));
@@ -77,9 +76,9 @@ void readGraph(string filename, WDigraph &graph, unordered_map<int, Point> &poin
 
 }
 
-stack<Point>* getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &map) {
+stack<Point> *getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &map) {
 
-    stack<Point>* route = new stack<Point>();
+    auto *route = new stack<Point>();
 
     unordered_map<int, PIL> tree;
 
@@ -99,7 +98,6 @@ stack<Point>* getPath(int a, int b, WDigraph &graph, unordered_map<int, Point> &
 }
 
 
-
 pair<int, int> getVertices(const Point p1, const Point p2, unordered_map<int, Point> &map) {
     // Instead of running this function twice for each point we know it will only ever get ran
     // when requiring
@@ -115,6 +113,13 @@ pair<int, int> getVertices(const Point p1, const Point p2, unordered_map<int, Po
 
 }
 
+enum State {
+    WaitingForRequest,
+    Processing,
+    PrintOutput,
+    Done
+};
+
 int main() {
 
     WDigraph graph;
@@ -122,18 +127,53 @@ int main() {
 
     readGraph(MAP_FILE_NAME, graph, pMap);
 
-    Point start{5365486, -11333915};
-    Point end{5364728, -11335891};
+    State st = WaitingForRequest;
 
-    pair<int, int> vs = getVertices(start, end, pMap);
+    Point start{};
+    Point end{};
 
-    stack<Point>* path = getPath(vs.first, vs.second, graph, pMap);
+    stack<Point> *path = nullptr;
 
-    while (path->size() > 0) {
-        Point top = path->top();
-        path->pop();
-        cout << top.lat << ' ' << top.lon << endl;
+    string command;
+
+    while (st != Done) {
+        switch (st) {
+            case WaitingForRequest:
+                cin >> command;
+                if (command == "R") {
+                    cin >> start.lat >> start.lon >> end.lat >> end.lon;
+                    st = Processing;
+                } else if (command == "S") {
+                    st = Done;
+                }
+                break;
+            case Processing: {
+                auto vertices = getVertices(start, end, pMap);
+
+                path = getPath(vertices.first, vertices.second, graph, pMap);
+            }
+                st = PrintOutput;
+                break;
+            case PrintOutput:
+                cout << "N " << path->size() << endl;
+                if(path->empty()) {
+                    st = WaitingForRequest;
+                } else {
+                    string ack;
+                    cin >> ack;
+                    while (!path->empty() && ack == "A") {
+                        Point top = path->top();
+                        path->pop();
+                        cout << "W " << top.lat << ' ' << top.lon << endl;
+                        cin >> ack;
+                    }
+                    cout << "E" << endl;
+                }
+                st = WaitingForRequest;
+                break;
+        }
     }
+
 
     return 0;
 }
