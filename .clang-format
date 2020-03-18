@@ -2,5 +2,5 @@ Language:        Cpp
 BasedOnStyle:  Google
 AlignTrailingComments: true
 AlignConsecutiveMacros: true
-ColumnLimit: 120
+ColumnLimit: 80
 DerivePointerAlignment: true

@@ -1,6 +1,6 @@
 /**
  * Mackenzie Malainey, 1570494
- * Michael Kwok, 
+ * Michael Kwok, 1548454
  * Assign #2 Part 1
  * CMPUT 275, Winter 2020
  */
@@ -8,9 +8,10 @@
 #ifndef _DIJKSTRA_H_
 #define _DIJKSTRA_H_
 
-#include "wdigraph.h"
-#include <utility>
 #include <unordered_map>
+#include <utility>
+
+#include "wdigraph.h"
 
 using namespace std;
 

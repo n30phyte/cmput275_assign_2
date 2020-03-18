@@ -1,6 +1,6 @@
 /**
  * Mackenzie Malainey, 1570494
- * Michael Kwok, 
+ * Michael Kwok, 1548454
  * Assign #2 Part 1
  * CMPUT 275, Winter 2020
  */
@@ -9,6 +9,7 @@
 #define _WEIGHTED_GRAPH_H_
 
 #include <unordered_map>
+
 #include "digraph.h"
 
 using namespace std;
@@ -21,7 +22,7 @@ using namespace std;
 */
 
 class WDigraph : public Digraph {
-public:
+ public:
   // No constructor or destructor are necessary this time.
   // A new instance will be an empty graph with no nodes.
 
@@ -35,13 +36,13 @@ public:
 
   // adds a weighted edge
   // if the edge already existed, does nothing
-  void addEdge(int u, int v, long long w){
+  void addEdge(int u, int v, long long w) {
     // use Digraph's addEdge method
     Digraph::addEdge(u, v);
     cost[u][v] = w;
   }
 
-private:
+ private:
   unordered_map<int, unordered_map<int, long long>> cost;
 };
 

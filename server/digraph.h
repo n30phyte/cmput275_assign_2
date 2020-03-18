@@ -1,6 +1,6 @@
 /**
  * Mackenzie Malainey, 1570494
- * Michael Kwok, 
+ * Michael Kwok, 1548454
  * Assign #2 Part 1
  * CMPUT 275, Winter 2020
  */
@@ -21,7 +21,7 @@ using namespace std;
   Vertices are assumed to be integers.
 */
 class Digraph {
-public:
+ public:
   // No constructor or destructor are necessary this time.
   // A new instance will be an empty graph with no nodes.
 
@@ -54,7 +54,7 @@ public:
   // return a vector with all vertices
   vector<int> vertices();
 
-private:
+ private:
   unordered_map<int, unordered_set<int>> nbrs;
 };
 

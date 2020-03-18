@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # #
 #  Mackenzie Malainey, 1570494
-#  Michael Kwok, INSERT ID
+#  Michael Kwok, 1548454
 #  Assignment 2 Part 1
 #  CMPUT 275, Winter 2020
 # # # # # # # # # # # # # # # #
