@@ -109,6 +109,12 @@ stack<Point> *getPath(int a, int b, WDigraph &graph,
                       unordered_map<int, Point> &map) {
   auto *route = new stack<Point>();
 
+  // Account for when the path begins and ends in the same place
+  if (a == b) {
+    route->push(map[a]);
+    return route;
+  }
+
   unordered_map<int, PIL> tree;
 
   // Build search tree
