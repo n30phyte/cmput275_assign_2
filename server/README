@@ -1,0 +1,35 @@
+Mackenzie Malainey, 1570494
+Michael Kwok, 1548454
+Assign #2 Part 1
+CMPUT 275, Winter 2020
+
+Included Files:
+ - README
+ - server/dijkstra.h
+ - server/heap.h
+ - server/wdigraph.h
+ - server/digraph.h
+ - server/server.cpp
+ - server/dijkstra.cpp
+ - server/edmonton-roads-2.0.1.txt
+ - server/Makefile
+ - server/digraph.cpp
+
+Description:
+Arduino pathfinder server.
+Communicates with Arduino client to return the shortest path between two places on a map
+
+Instructions:
+Go into the server folder
+Compile code using the Makefile
+(See Makefile targets information below)
+Run application using: ./server
+
+Makefile Targets:
+ - server: build server application, depends on following objects
+ - server.o: build server object file
+ - digraph.o: build digraph object file
+ - dijkstra.o: build dijkstra object file
+
+Acknowledgements:
+Some code was adapted from previous weekly problems, or built off of provided code from eClass
