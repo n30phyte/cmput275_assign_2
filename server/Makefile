@@ -28,4 +28,4 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 clean:
-	rm -f $(BUILD_DIR) -r
+	rm -f server $(BUILD_DIR) -r
