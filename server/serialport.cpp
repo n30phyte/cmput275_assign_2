@@ -1,13 +1,14 @@
-#include "SerialPort.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <time.h>
+#include "serialport.h"
 
-SerialPort::SerialPort(const char *portName) {
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
+
+SerialPort::SerialPort(const char* portName) {
   fd = open(portName, O_RDWR | O_NOCTTY);
   if (fd == -1) {
     printf("Error opening device %s\n", portName);
@@ -23,7 +24,8 @@ SerialPort::SerialPort(const char *portName) {
   bzero(&newtio, sizeof(newtio));
 
   newtio.c_cflag = B9600 | CRTSCTS | CS8 | CLOCAL | CREAD;
-  newtio.c_iflag = IGNCR; // carriage returns ('\r') are completely ignored when reading
+  newtio.c_iflag =
+      IGNCR;  // carriage returns ('\r') are completely ignored when reading
   newtio.c_oflag = 0;
   newtio.c_lflag = ICANON;
 
@@ -49,7 +51,7 @@ string SerialPort::readline(int timeout) {
     // loop until a character is available, or timeout
     do {
       clock_t cur = clock();
-      int ms_waited((cur-start)*1000.0/CLOCKS_PER_SEC);
+      int ms_waited((cur - start) * 1000.0 / CLOCKS_PER_SEC);
       if (timeout > 0 && ms_waited > timeout) {
         // timeout!
         return "";
@@ -61,7 +63,7 @@ string SerialPort::readline(int timeout) {
 
     // read a character
     if (read(fd, &c, 1) == 0) {
-      continue; // probably doesn't happen
+      continue;  // probably doesn't happen
     }
     line += c;
   } while (c != '\n');

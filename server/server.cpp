@@ -5,17 +5,34 @@
  * CMPUT 275, Winter 2020
  */
 
+#include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <stack>
 #include <string>
 
 #include "dijkstra.h"
+#include "serial_handler.h"
 #include "wdigraph.h"
 
 const char MAP_FILE_NAME[] = "edmonton-roads-2.0.1.txt";
 
 using namespace std;
+
+vector<string> split(std::string text, char seperator) {
+  vector<string> output;
+
+  auto start = text.begin();
+  auto token_end = find(start, text.end(), seperator);
+
+  while (token_end != text.end()) {
+    output.push_back(string(start, token_end));
+    start = token_end + 1;
+    token_end = find(start, text.end(), seperator);
+  }
+  output.push_back(string(start, token_end));
+
+  return output;
+}
 
 struct Point {
   long long lat;  // latitude of the point
@@ -143,12 +160,13 @@ stack<Point> *getPath(int a, int b, WDigraph &graph,
  * @param p2: Second point to clip
  * @param map: Map that provides vertexes associated with known points
  *
- * @return: Vertex ID of the closest points to given points in respective order
+ * @return: Vertex ID of the closest points to given points in respective
+ * order
  */
 pair<int, int> getVertices(const Point p1, const Point p2,
                            unordered_map<int, Point> &map) {
-  // Instead of running this function twice for each point we know it will only
-  // ever get ran when requiring
+  // Instead of running this function twice for each point we know it will
+  // only ever get ran when requiring
 
   pair<int, int> vs(map.begin()->first, map.begin()->first);
 
@@ -168,6 +186,7 @@ enum State { WaitingForRequest, Processing, PrintOutput, Done };
 
 int main() {
   WDigraph graph;
+  Serial arduino;
   unordered_map<int, Point> pMap;
 
   readGraph(MAP_FILE_NAME, graph, pMap);
@@ -182,15 +201,19 @@ int main() {
   string command;
 
   bool isDone = false;
+  vector<string> tokens;
 
   while (!isDone) {
     switch (st) {
       case WaitingForRequest:
-        cin >> command;
+        tokens = split(arduino.Read(), ' ');
 
-        if (command == "R") {
+        if (tokens[0] == "R") {
           // Request a path
-          cin >> start.lat >> start.lon >> end.lat >> end.lon;
+          start.lat = stoll(tokens[1]);
+          start.lon = stoll(tokens[2]);
+          end.lat = stoll(tokens[3]);
+          end.lon = stoll(tokens[4]);
           // Switch to process request
           st = Processing;
         }
@@ -208,23 +231,22 @@ int main() {
 
       case PrintOutput:
         // Print size of path
-        cout << "N " << path->size() << endl;
+        arduino.Send("N " + path->size());
 
         // Only go through with printing waypoints when not empty.
         if (!path->empty()) {
-          string ack;
-          cin >> ack;
+          string ack = arduino.Read();
 
           while (!path->empty()) {
             if (ack == "A") {
               Point top = path->top();
               path->pop();
-              cout << "W " << top.lat << ' ' << top.lon << endl;
+              arduino.Send("W " + top.lat + ' ' + top.lon);
             }
-            cin >> ack;
+            ack = arduino.Read();
           }
 
-          cout << "E" << endl;
+          arduino.Send("E");
         }
         delete path;
         st = Done;

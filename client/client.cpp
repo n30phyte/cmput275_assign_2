@@ -3,6 +3,7 @@
 #include <SD.h>
 
 #include "consts_and_types.h"
+#include "draw_route.h"
 #include "map_drawing.h"
 #include "serial_handling.h"
 
@@ -181,7 +182,6 @@ int main() {
       draw_map();
       draw_cursor();
 
-      // TODO: currently does nothing, your job is to implement it so
       // that if there is a path, then you will draw the line
       // segments connecting these waypoints together
       draw_route();
