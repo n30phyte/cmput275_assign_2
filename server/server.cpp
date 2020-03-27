@@ -11,7 +11,7 @@
 #include <string>
 
 #include "dijkstra.h"
-#include "serial_handler.h"
+#include "serialport.h"
 #include "wdigraph.h"
 
 const char MAP_FILE_NAME[] = "edmonton-roads-2.0.1.txt";
@@ -186,7 +186,7 @@ enum State { WaitingForRequest, Processing, PrintOutput, Done };
 
 int main() {
   WDigraph graph;
-  Serial arduino;
+  SerialPort arduino("/dev/ttyUSB0");
   unordered_map<int, Point> pMap;
 
   readGraph(MAP_FILE_NAME, graph, pMap);
@@ -203,10 +203,12 @@ int main() {
   bool isDone = false;
   vector<string> tokens;
 
+  int default_timeout = 1000;
+
   while (!isDone) {
     switch (st) {
       case WaitingForRequest:
-        tokens = split(arduino.Read(), ' ');
+        tokens = split(arduino.readline(default_timeout), ' ');
 
         if (tokens[0] == "R") {
           // Request a path
@@ -231,22 +233,24 @@ int main() {
 
       case PrintOutput:
         // Print size of path
-        arduino.Send("N " + path->size());
+        arduino.writeline("N ");
+        arduino.writeline(std::to_string(path->size()));
+        arduino.writeline("\n");
 
         // Only go through with printing waypoints when not empty.
         if (!path->empty()) {
-          string ack = arduino.Read();
+          string ack = arduino.readline(default_timeout);
 
           while (!path->empty()) {
             if (ack == "A") {
               Point top = path->top();
               path->pop();
-              arduino.Send("W " + top.lat + ' ' + top.lon);
+              arduino.writeline("W " + top.lat + ' ' + top.lon + '\n');
             }
-            ack = arduino.Read();
+            ack = arduino.readline(default_timeout);
           }
 
-          arduino.Send("E");
+          arduino.writeline("E\n");
         }
         delete path;
         st = Done;

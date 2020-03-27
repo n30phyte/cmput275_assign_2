@@ -48,14 +48,14 @@ uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
   unsigned int N = 0;
 
   // Send request
-  Serial.write('R ');
-  Serial.write(start.lat);
-  Serial.write(' ');
-  Serial.write(start.lon);
-  Serial.write(' ');
-  Serial.write(end.lat);
-  Serial.write(' ');
-  Serial.write(end.lon);
+  Serial.print("R ");
+  Serial.print(start.lat);
+  Serial.print(" ");
+  Serial.print(start.lon);
+  Serial.print(" ");
+  Serial.print(end.lat);
+  Serial.print(" ");
+  Serial.println(end.lon);
 
   if (read_line(linebuf, 10000) && linebuf[0] == 'N') {
     shared.num_waypoints = int_conversion(linebuf + 2);
