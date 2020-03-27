@@ -15,7 +15,7 @@ void draw_route() {
     xy_pos true_cord2 = xy_pos(longitude_to_x(zoom_level, cord2.lon),
                                latitude_to_y(zoom_level, cord2.lat));
     shared.tft->fillCircle(true_cord.x - shared.map_coords.x,
-                           true_cord.y - shared.map_coords.y, 4, 0xFF0000);
+                           true_cord.y - shared.map_coords.y, 2, 0xFF0000);
     shared.tft->drawLine(true_cord.x - shared.map_coords.x,
                          true_cord.y - shared.map_coords.y,
                          true_cord2.x - shared.map_coords.x,

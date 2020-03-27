@@ -68,6 +68,8 @@ string SerialPort::readline(int timeout) {
     line += c;
   } while (c != '\n');
 
+  printf("Received: %s\n", line.c_str());
+
   return line;
 }
 

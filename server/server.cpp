@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 #include <stack>
 #include <string>
 
@@ -182,7 +183,7 @@ pair<int, int> getVertices(const Point p1, const Point p2,
 }
 
 // Enum of states for the FSM used to control the server.
-enum State { WaitingForRequest, Processing, PrintOutput, Done };
+enum State { WaitingForRequest, Processing, PrintOutput };
 
 int main() {
   WDigraph graph;
@@ -200,24 +201,26 @@ int main() {
 
   string command;
 
-  bool isDone = false;
   vector<string> tokens;
 
   int default_timeout = 1000;
 
-  while (!isDone) {
+  while (true) {
     switch (st) {
       case WaitingForRequest:
-        tokens = split(arduino.readline(default_timeout), ' ');
+        command = arduino.readline(default_timeout);
+        if (command.size() > 0) {
+          tokens = split(command, ' ');
 
-        if (tokens[0] == "R") {
-          // Request a path
-          start.lat = stoll(tokens[1]);
-          start.lon = stoll(tokens[2]);
-          end.lat = stoll(tokens[3]);
-          end.lon = stoll(tokens[4]);
-          // Switch to process request
-          st = Processing;
+          if (tokens[0] == "R") {
+            // Request a path
+            start.lat = stoll(tokens[1]);
+            start.lon = stoll(tokens[2]);
+            end.lat = stoll(tokens[3]);
+            end.lon = stoll(tokens[4]);
+            // Switch to process request
+            st = Processing;
+          }
         }
         break;
 
@@ -242,10 +245,14 @@ int main() {
           string ack = arduino.readline(default_timeout);
 
           while (!path->empty()) {
-            if (ack == "A") {
+            if (ack[0] == 'A') {
               Point top = path->top();
               path->pop();
-              arduino.writeline("W " + top.lat + ' ' + top.lon + '\n');
+              arduino.writeline("W ");
+              arduino.writeline(std::to_string(top.lat));
+              arduino.writeline(" ");
+              arduino.writeline(std::to_string(top.lon));
+              arduino.writeline("\n");
             }
             ack = arduino.readline(default_timeout);
           }
@@ -253,11 +260,7 @@ int main() {
           arduino.writeline("E\n");
         }
         delete path;
-        st = Done;
-        break;
-
-      case Done:
-        isDone = true;
+        st = WaitingForRequest;
         break;
     }
   }
