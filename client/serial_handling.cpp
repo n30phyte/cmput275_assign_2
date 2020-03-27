@@ -4,18 +4,25 @@ extern shared_vars shared;
 
 // TODO: Documentation
 
-void process_waypoint(String& line, lon_lat_32* waypoint_array) {
-  int offset = 0;
-  line.remove(0, 2);
+char* begin(const String& str) {
+  return (char*)str.c_str();
+}
 
+char* end(const String& str) {
+  return (char*)(str.c_str() + str.length());
+}
+
+
+void process_waypoint(String& line, lon_lat_32* waypoint_array) {
   // Find space
-  for (auto it = line.begin(); it != line.end(); it++) {
+  for (auto it = begin(line); it != end(line); it++) {
     if (*it == ' ') {
       // We found space
-      int32_t latitude = line.substring(0, it - line.begin()).toInt();
+      int32_t latitude = line.substring(0, it -begin(line)).toInt();
       int32_t longitude =
-          line.substring(it - line.begin() + 1, line.length() - 1).toInt();
+          line.substring(it - begin(line) + 1, line.length() - 1).toInt();
       *waypoint_array = lon_lat_32(longitude, latitude);
+      return;
     }
   }
 }
@@ -28,7 +35,8 @@ bool read_line(String& line, unsigned long timeout = 1000) {
 
   char input = ' ';
 
-  while ((millis() - start_time) <= timeout) {
+  // while ((millis() - start_time) <= timeout) {
+    while (true) {
     if (Serial.available()) {
       input = Serial.read();
       buffer[i++] = input;
@@ -45,8 +53,6 @@ bool read_line(String& line, unsigned long timeout = 1000) {
 uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
   String line;
 
-  unsigned int N = 0;
-
   // Send request
   Serial.print("R ");
   Serial.print(start.lat);
@@ -58,7 +64,7 @@ uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
   Serial.println(end.lon);
 
   if (read_line(line, 10000) && line[0] == 'N') {
-    line.remove(0, 2);
+    line = line.substring(2);
     shared.num_waypoints = line.toInt();
     Serial.println("A");
   } else {
@@ -66,7 +72,8 @@ uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
   }
 
   for (auto i = 0; i < shared.num_waypoints; i++) {
-    if (read_line(line)) {
+    if (read_line(line)  && line[0] == 'W') {
+      line = line.substring(2);
       process_waypoint(line, shared.waypoints + i);
       Serial.println("A");
     } else {
