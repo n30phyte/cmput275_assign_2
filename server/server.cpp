@@ -16,6 +16,7 @@
 #include "wdigraph.h"
 
 const char MAP_FILE_NAME[] = "edmonton-roads-2.0.1.txt";
+const char SERIAL_PORT[] = "/dev/ttyACM0";
 
 using namespace std;
 
@@ -187,7 +188,7 @@ enum State { WaitingForRequest, Processing, PrintOutput };
 
 int main() {
   WDigraph graph;
-  SerialPort arduino("/dev/ttyUSB0");
+  SerialPort arduino(SERIAL_PORT);
   unordered_map<int, Point> pMap;
 
   readGraph(MAP_FILE_NAME, graph, pMap);

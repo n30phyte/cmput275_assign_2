@@ -1,0 +1,85 @@
+Mackenzie Malainey, 1570494
+Michael Kwok, 1548454
+Assign #2 Part 2
+CMPUT 275, Winter 2020
+
+Description:
+Arduino pathfinder server and client
+Server communicates to client a shortest path between two places on a map
+Client (Arduino) displayes the path on a given map of Edmonton
+
+Acknowledgements:
+Some code was adapted from previous weekly problems, or built off of provided code from eClass
+
+
+
+SERVER INFORMATION:
+
+Source location: server/
+
+Included Files:
+ - server/dijkstra.h
+ - server/heap.h
+ - server/wdigraph.h
+ - server/digraph.h
+ - server/server.cpp
+ - server/dijkstra.cpp
+ - server/edmonton-roads-2.0.1.txt
+ - server/Makefile
+ - server/digraph.cpp
+ - server/serialport.cpp
+ - server/serialport.h
+
+Instructions:
+ - Go into the server folder
+ - Compile code using the Makefile
+ - (See Makefile targets information below)
+ - Run application using: ./server
+ - Note: Run the server application after client has started
+ - Note: Server might be bound to a different port than expected
+         This can be changed in the source code in the main.cpp file (line 19)
+
+Makefile Targets:
+ - server: build server application, depends on following objects
+ - server.o: build server object file
+ - digraph.o: build digraph object file
+ - dijkstra.o: build dijkstra object file
+
+
+
+CLIENT INFORMATION:
+
+Source location: client/
+
+Included files:
+ - client.cpp
+ - consts_and_types.h
+ - draw_route.h
+ - draw_route.cpp
+ - lcd_image.cpp
+ - lcd_image.h
+ - Makefile
+ - map_drawing.cpp
+ - map_drawing.h
+ - serial_handling.cpp
+ - serial_handling.h
+
+Wiring:
+Mount the TFT display on the Arduino lining up power ports
+
+Joystick:
+VRx <--> A8
+VRy <--> A9
+SW  <--> Digital Pin 53
+GND <--> GND
++5V <--> 5V
+
+Zoom Out Button <--> Digital Pin 47
+Zoom In Button  <--> Digital Pin 45
+
+Instructions:
+ - Connect Arduino
+ - Use makefile to build and upload
+ - Once complete go to server folder in project and run ./server
+ - Use joystick and button controls to control client
+
