@@ -28,19 +28,18 @@ bool read_line(String& line, unsigned long timeout = 1000) {
 
   char input = ' ';
 
-  while (input != '\n' || input != '\r') {
+  while ((millis() - start_time) <= timeout) {
     if (Serial.available()) {
       input = Serial.read();
       buffer[i++] = input;
     }
     if (input == '\n' || input == '\r') {
-      break;
+      buffer[i] = '\0';
+      line = String(buffer);
+      return true;
     }
   }
-
-  buffer[i] = '\0';
-  line = String(buffer);
-  return true;
+  return false;
 }
 
 uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
@@ -58,7 +57,7 @@ uint8_t get_waypoints(const lon_lat_32& start, const lon_lat_32& end) {
   Serial.print(" ");
   Serial.println(end.lon);
 
-  if (read_line(line, 1000000) && line[0] == 'N') {
+  if (read_line(line, 10000) && line[0] == 'N') {
     line.remove(0, 2);
     shared.num_waypoints = line.toInt();
     Serial.println("A");
