@@ -18,10 +18,10 @@ server: server.o dijkstra.o digraph.o serialport.o
 server.o: server.cpp $(BUILD_DIR)
 	$(CC) -c server.cpp -o $(BUILD_DIR)/server.o $(CFLAGS)
 
-digraph.o: digraph.cpp $(BUILD_DIR)
+digraph.o: digraph.cpp digraph.h $(BUILD_DIR)
 	$(CC) -c digraph.cpp -o $(BUILD_DIR)/digraph.o $(CFLAGS)
 
-dijkstra.o: dijkstra.cpp $(BUILD_DIR)
+dijkstra.o: dijkstra.cpp dijkstra.h $(BUILD_DIR)
 	$(CC) -c dijkstra.cpp -o $(BUILD_DIR)/dijkstra.o $(CFLAGS)
 
 serialport.o: serialport.cpp serialport.h $(BUILD_DIR)
