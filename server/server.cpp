@@ -16,16 +16,26 @@
 #include "wdigraph.h"
 
 const char MAP_FILE_NAME[] = "edmonton-roads-2.0.1.txt";
+// Some arduinos use /dev/ttyUSB0, so this was left in to allow for configuration
 const char SERIAL_PORT[] = "/dev/ttyACM0";
 
 using namespace std;
 
-vector<string> split(std::string text, char seperator) {
+/**
+ * Splits an std::string to a vector of std::strings.
+ * by a specified seperator
+ *
+ * @param text: The text to be split up
+ * @param seperator: The seperator for the text to be split
+ * @return: A vector where the set of strings are stored.
+ */
+vector<string> split(string text, char seperator) {
   vector<string> output;
 
   auto start = text.begin();
   auto token_end = find(start, text.end(), seperator);
 
+  // Finds next instance of seperator and splits repeatedly
   while (token_end != text.end()) {
     output.push_back(string(start, token_end));
     start = token_end + 1;
@@ -105,14 +115,6 @@ void readGraph(const string &filename, WDigraph &graph,
   file.close();
 }
 
-/* Paramters:
- *  (int):
- *
- *
- * Returns:
- * path (stack<Point>*):
- *
- */
 /**
  * Given a start and end vertex return the shortest path to the vertex
  *
@@ -188,7 +190,6 @@ enum State { WaitingForRequest, Processing, PrintOutput };
 
 int main() {
   WDigraph graph;
-  SerialPort arduino(SERIAL_PORT);
   unordered_map<int, Point> pMap;
 
   readGraph(MAP_FILE_NAME, graph, pMap);
@@ -200,16 +201,17 @@ int main() {
 
   stack<Point> *path = nullptr;
 
+  SerialPort arduino(SERIAL_PORT);
   string command;
-
   vector<string> tokens;
 
-  int default_timeout = 1000;
+  const int default_timeout = 1000;
 
   while (true) {
     switch (st) {
       case WaitingForRequest:
         command = arduino.readline(default_timeout);
+        
         if (command.size() > 0) {
           tokens = split(command, ' ');
 
@@ -247,14 +249,17 @@ int main() {
 
           while (!path->empty()) {
             if (ack[0] == 'A') {
+
               Point top = path->top();
               path->pop();
+
               arduino.writeline("W ");
               arduino.writeline(std::to_string(top.lat));
               arduino.writeline(" ");
               arduino.writeline(std::to_string(top.lon));
               arduino.writeline("\n");
             }
+
             ack = arduino.readline(default_timeout);
           }
 
