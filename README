@@ -52,17 +52,17 @@ CLIENT INFORMATION:
 Source location: client/
 
 Included files:
- - client.cpp
- - consts_and_types.h
- - draw_route.h
- - draw_route.cpp
- - lcd_image.cpp
- - lcd_image.h
- - Makefile
- - map_drawing.cpp
- - map_drawing.h
- - serial_handling.cpp
- - serial_handling.h
+ - client/client.cpp
+ - client/consts_and_types.h
+ - client/draw_route.h
+ - client/draw_route.cpp
+ - client/lcd_image.cpp
+ - client/lcd_image.h
+ - client/Makefile
+ - client/map_drawing.cpp
+ - client/map_drawing.h
+ - client/serial_handling.cpp
+ - client/serial_handling.h
 
 Wiring:
 Mount the TFT display on the Arduino lining up power ports

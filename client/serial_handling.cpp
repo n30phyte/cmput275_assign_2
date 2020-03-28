@@ -1,5 +1,12 @@
 #include "serial_handling.h"
 
+/**
+ * Mackenzie Malainey, 1570494
+ * Michael Kwok, 1548454
+ * Assign #2 Part 2
+ * CMPUT 275, Winter 2020
+ */
+
 extern shared_vars shared;
 
 /**

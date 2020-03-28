@@ -1,9 +1,14 @@
 #ifndef __SERIAL_HANDLING_H
 #define __SERIAL_HANDLING_H
+/**
+ * Mackenzie Malainey, 1570494
+ * Michael Kwok, 1548454
+ * Assign #2 Part 2
+ * CMPUT 275, Winter 2020
+ */
 
 #include "consts_and_types.h"
 #include "map_drawing.h"
-#include <Arduino.h>
 
 /**
  * Communicates with server over serial
